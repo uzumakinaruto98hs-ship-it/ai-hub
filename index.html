@@ -20,16 +20,13 @@ body{
 }
 
 /* HEADER */
-
 header{
     height:82px;
     background:white;
     border-bottom:1px solid #e5eaf2;
-
     display:flex;
     align-items:center;
     justify-content:space-between;
-
     padding:0 5%;
 }
 
@@ -56,22 +53,22 @@ header{
     font-size:18px;
 }
 
-
-/* CHAT */
-
+/* CHAT PAGE */
 .chat-page{
     height:calc(100vh - 82px);
-
     display:flex;
     flex-direction:column;
 }
 
-
 /* WELCOME */
-
 .welcome{
     text-align:center;
     padding-top:85px;
+    transition:opacity .2s ease;
+}
+
+.welcome.hide{
+    display:none;
 }
 
 .badge{
@@ -98,19 +95,13 @@ header{
     font-size:18px;
 }
 
-
 /* MESSAGES */
-
 .messages{
     flex:1;
-
     width:100%;
     max-width:850px;
-
     margin:35px auto 0;
-
     padding:0 20px 150px;
-
     overflow-y:auto;
 }
 
@@ -125,14 +116,11 @@ header{
 
 .bubble{
     max-width:75%;
-
     padding:13px 17px;
-
     border-radius:18px;
-
     font-size:16px;
-
     line-height:1.5;
+    word-wrap:break-word;
 }
 
 .user .bubble{
@@ -148,43 +136,27 @@ header{
     border-bottom-left-radius:5px;
 }
 
-
 /* INPUT AREA */
-
 .input-area{
-
     position:fixed;
-
     left:50%;
     bottom:25px;
-
     transform:translateX(-50%);
-
     width:92%;
     max-width:850px;
 }
 
-
-/* TOOL MENU */
-
+/* TOOLS MENU */
 .tools-menu{
     display:none;
-
     position:absolute;
-
     left:0;
     bottom:82px;
-
     width:320px;
-
     padding:10px;
-
     background:#202124;
-
     border-radius:20px;
-
     box-shadow:0 18px 45px rgba(0,0,0,.28);
-
     z-index:20;
 }
 
@@ -195,15 +167,10 @@ header{
 .menu-item{
     display:flex;
     align-items:center;
-
     gap:14px;
-
     padding:11px;
-
     border-radius:14px;
-
     color:white;
-
     cursor:pointer;
 }
 
@@ -214,15 +181,11 @@ header{
 .menu-icon{
     width:44px;
     height:44px;
-
     border-radius:12px;
-
     background:#35373c;
-
     display:flex;
     align-items:center;
     justify-content:center;
-
     font-size:21px;
 }
 
@@ -230,76 +193,50 @@ header{
     font-size:15px;
 }
 
-
 /* INPUT BOX */
-
 .input-box{
-
     height:68px;
-
     background:white;
-
     border:1px solid #dce3ee;
-
     border-radius:36px;
-
     padding:8px;
-
     display:flex;
     align-items:center;
-
     box-shadow:0 10px 35px rgba(40,70,120,.15);
 }
 
 .plus{
     width:50px;
     height:50px;
-
     border:none;
-
     border-radius:50%;
-
     background:#eef2f7;
-
     font-size:29px;
-
     color:#566274;
-
     cursor:pointer;
 }
 
 .input{
     flex:1;
-
     border:none;
     outline:none;
-
     background:transparent;
-
     padding:0 17px;
-
     font-size:17px;
 }
 
 .send{
     width:50px;
     height:50px;
-
     border:none;
     border-radius:50%;
-
     background:#2866d8;
-
     color:white;
-
     font-size:20px;
-
     cursor:pointer;
 }
 
-
 /* MOBILE */
-
 @media(max-width:700px){
 
     header{
@@ -357,16 +294,11 @@ header{
 </style>
 </head>
 
-
 <body>
-
-
-<!-- HEADER -->
 
 <header>
 
     <div>
-
         <div class="logo">
             🤖 AI <span>Hub</span>
         </div>
@@ -374,9 +306,7 @@ header{
         <div class="sub">
             Made with ❤️ by Hema Sai Challa
         </div>
-
     </div>
-
 
     <button class="theme">
         ☼ ☾
@@ -385,15 +315,9 @@ header{
 </header>
 
 
-
-<!-- CHAT PAGE -->
-
 <section class="chat-page">
 
-
-    <!-- WELCOME -->
-
-    <div class="welcome">
+    <div class="welcome" id="welcome">
 
         <div class="badge">
             ✦ Smart AI Tools for Everyone
@@ -410,108 +334,57 @@ header{
     </div>
 
 
+    <div class="messages" id="messages"></div>
 
-    <!-- MESSAGES -->
-
-    <div
-        class="messages"
-        id="messages"
-    ></div>
-
-
-
-    <!-- INPUT -->
 
     <div class="input-area">
 
+        <div class="tools-menu" id="toolsMenu">
 
-        <!-- TOOLS -->
-
-        <div
-            class="tools-menu"
-            id="toolsMenu"
-        >
-
-            <div
-                class="menu-item"
-                onclick="selectTool('AI Text Generator')"
-            >
+            <div class="menu-item"
+                 onclick="selectTool('AI Text Generator')">
                 <div class="menu-icon">🔤</div>
-                <div class="menu-text">
-                    AI Text Generator
-                </div>
+                <div class="menu-text">AI Text Generator</div>
             </div>
 
-
-            <div
-                class="menu-item"
-                onclick="selectTool('Prompt Generator')"
-            >
+            <div class="menu-item"
+                 onclick="selectTool('Prompt Generator')">
                 <div class="menu-icon">🪄</div>
-                <div class="menu-text">
-                    Prompt Generator
-                </div>
+                <div class="menu-text">Prompt Generator</div>
             </div>
 
-
-            <div
-                class="menu-item"
-                onclick="selectTool('Study Helper')"
-            >
+            <div class="menu-item"
+                 onclick="selectTool('Study Helper')">
                 <div class="menu-icon">🎓</div>
-                <div class="menu-text">
-                    Study Helper
-                </div>
+                <div class="menu-text">Study Helper</div>
             </div>
 
-
-            <div
-                class="menu-item"
-                onclick="selectTool('Image Generator')"
-            >
+            <div class="menu-item"
+                 onclick="selectTool('Image Generator')">
                 <div class="menu-icon">🖼️</div>
-                <div class="menu-text">
-                    Image Generator
-                </div>
+                <div class="menu-text">Image Generator</div>
             </div>
 
-
-            <div
-                class="menu-item"
-                onclick="selectTool('Summarizer')"
-            >
+            <div class="menu-item"
+                 onclick="selectTool('Summarizer')">
                 <div class="menu-icon">📝</div>
-                <div class="menu-text">
-                    Summarizer
-                </div>
+                <div class="menu-text">Summarizer</div>
             </div>
 
-
-            <div
-                class="menu-item"
-                onclick="selectTool('Idea Generator')"
-            >
+            <div class="menu-item"
+                 onclick="selectTool('Idea Generator')">
                 <div class="menu-icon">💡</div>
-                <div class="menu-text">
-                    Idea Generator
-                </div>
+                <div class="menu-text">Idea Generator</div>
             </div>
 
         </div>
 
 
-
-        <!-- INPUT BOX -->
-
         <div class="input-box">
 
-            <button
-                class="plus"
-                onclick="toggleMenu()"
-            >
+            <button class="plus" onclick="toggleMenu()">
                 +
             </button>
-
 
             <input
                 id="input"
@@ -520,11 +393,7 @@ header{
                 placeholder="Ask AI anything..."
             >
 
-
-            <button
-                class="send"
-                onclick="sendMessage()"
-            >
+            <button class="send" onclick="sendMessage()">
                 ➤
             </button>
 
@@ -535,10 +404,7 @@ header{
 </section>
 
 
-
 <script>
-
-/* PLUS MENU */
 
 function toggleMenu(){
 
@@ -549,15 +415,12 @@ function toggleMenu(){
 }
 
 
-/* SELECT TOOL */
-
 function selectTool(tool){
 
     const input =
         document.getElementById("input");
 
-    input.value =
-        tool + ": ";
+    input.value = tool + ": ";
 
     input.focus();
 
@@ -568,8 +431,6 @@ function selectTool(tool){
 }
 
 
-/* SEND MESSAGE */
-
 function sendMessage(){
 
     const input =
@@ -578,18 +439,22 @@ function sendMessage(){
     const text =
         input.value.trim();
 
+    /* EMPTY MESSAGE CHECK */
     if(text === ""){
         return;
     }
 
+    /* HIDE WELCOME */
+    document
+        .getElementById("welcome")
+        .classList.add("hide");
 
+    /* ADD USER MESSAGE */
     addMessage(text,"user");
 
     input.value = "";
 
-
     /* DEMO AI REPLY */
-
     setTimeout(function(){
 
         addMessage(
@@ -602,20 +467,16 @@ function sendMessage(){
 }
 
 
-/* ADD MESSAGE */
-
 function addMessage(text,type){
 
     const messages =
         document.getElementById("messages");
-
 
     const message =
         document.createElement("div");
 
     message.className =
         "message " + type;
-
 
     const bubble =
         document.createElement("div");
@@ -626,11 +487,9 @@ function addMessage(text,type){
     bubble.textContent =
         text;
 
-
     message.appendChild(bubble);
 
     messages.appendChild(message);
-
 
     messages.scrollTop =
         messages.scrollHeight;
@@ -638,7 +497,7 @@ function addMessage(text,type){
 }
 
 
-/* ENTER KEY */
+/* ENTER TO SEND */
 
 document
     .getElementById("input")
@@ -654,7 +513,7 @@ document
     );
 
 
-/* CLOSE MENU */
+/* CLOSE TOOLS MENU */
 
 document.addEventListener(
     "click",
@@ -665,7 +524,6 @@ document.addEventListener(
 
         const plus =
             document.querySelector(".plus");
-
 
         if(
             !menu.contains(event.target) &&
