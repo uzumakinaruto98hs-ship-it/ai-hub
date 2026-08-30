@@ -1,16 +1,449 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>AI Hub</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Hub</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #ffffff;
+    color: #172033;
+}
+
+/* HEADER */
+
+header {
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 7%;
+    border-bottom: 1px solid #e7edf5;
+    background: white;
+}
+
+.logo {
+    font-size: 30px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.logo span {
+    color: #2866d8;
+}
+
+nav a {
+    margin: 0 18px;
+    text-decoration: none;
+    color: #172033;
+    font-size: 16px;
+}
+
+nav a:hover {
+    color: #2866d8;
+}
+
+.mode {
+    border: 1px solid #dfe5ee;
+    border-radius: 25px;
+    padding: 10px 16px;
+    background: white;
+    cursor: pointer;
+}
+
+/* HERO */
+
+.hero {
+    min-height: 440px;
+    display: flex;
+    align-items: center;
+    padding: 65px 7%;
+    background: linear-gradient(135deg, #ffffff, #f4f8ff);
+}
+
+.hero-text {
+    max-width: 700px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 10px 18px;
+    background: #edf5ff;
+    color: #2860a8;
+    border-radius: 25px;
+    margin-bottom: 25px;
+    font-weight: bold;
+}
+
+.hero h1 {
+    font-size: 58px;
+    line-height: 1.1;
+    margin-bottom: 20px;
+}
+
+.hero h1 span {
+    color: #2866d8;
+}
+
+.hero p {
+    font-size: 20px;
+    line-height: 1.6;
+    color: #687386;
+    max-width: 600px;
+}
+
+/* FEATURES */
+
+.features {
+    display: flex;
+    gap: 18px;
+    margin-top: 35px;
+    flex-wrap: wrap;
+}
+
+.feature {
+    padding: 15px 25px;
+    background: white;
+    border: 1px solid #e1e7ef;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px #edf1f6;
+}
+
+/* TOOLS */
+
+.tools {
+    padding: 60px 7%;
+}
+
+.tools h2 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #727d8e;
+    margin-bottom: 32px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.card {
+    padding: 28px;
+    border: 1px solid #e1e7ef;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px #edf1f6;
+    transition: 0.3s;
+    background: white;
+}
+
+.card:hover {
+    transform: translateY(-7px);
+}
+
+.icon {
+    font-size: 36px;
+    margin-bottom: 18px;
+}
+
+.card h3 {
+    font-size: 21px;
+    margin-bottom: 10px;
+}
+
+.card p {
+    color: #718096;
+    line-height: 1.5;
+    margin-bottom: 18px;
+}
+
+.card ul {
+    list-style: none;
+    color: #596579;
+    line-height: 2;
+}
+
+.card button {
+    width: 100%;
+    border: none;
+    padding: 14px;
+    margin-top: 20px;
+    border-radius: 8px;
+    background: #2866d8;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.card button:hover {
+    background: #174eae;
+}
+
+/* FOOTER */
+
+footer {
+    border-top: 1px solid #e5eaf1;
+    padding: 30px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #687386;
+}
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+
+    header {
+        padding: 0 5%;
+    }
+
+    .logo {
+        font-size: 24px;
+    }
+
+    nav {
+        display: none;
+    }
+
+    .hero {
+        padding: 55px 6%;
+        min-height: 400px;
+    }
+
+    .hero h1 {
+        font-size: 42px;
+    }
+
+    .hero p {
+        font-size: 18px;
+    }
+
+    .features {
+        justify-content: flex-start;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .tools {
+        padding: 45px 6%;
+    }
+
+    footer {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+}
+</style>
 </head>
+
 <body>
 
-    <h1>🤖 AI Hub</h1>
-    <p>Welcome to your AI Tools website!</p>
+<!-- HEADER -->
 
-    <button>AI Text Generator</button>
-    <button>Prompt Generator</button>
-    <button>Study Helper</button>
+<header>
+
+    <div class="logo">
+        🤖 AI <span>Hub</span>
+    </div>
+
+    <nav>
+        <a href="#">Home</a>
+        <a href="#tools">Tools</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+    </nav>
+
+    <button class="mode">
+        ☼ ☾
+    </button>
+
+</header>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+    <div class="hero-text">
+
+        <div class="badge">
+            ✦ Smart Tools for Everyone
+        </div>
+
+        <h1>
+            Welcome to <span>your AI</span>
+        </h1>
+
+        <p>
+            Use powerful AI tools to write, create,
+            learn and achieve more every day.
+        </p>
+
+        <div class="features">
+
+            <div class="feature">
+                ⚡ Fast
+            </div>
+
+            <div class="feature">
+                🛡️ Secure
+            </div>
+
+            <div class="feature">
+                😊 Easy to Use
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- POPULAR TOOLS -->
+
+<section class="tools" id="tools">
+
+    <h2>
+        Popular Tools ✦
+    </h2>
+
+    <p class="subtitle">
+        Explore our most useful AI tools
+    </p>
+
+
+    <div class="cards">
+
+
+        <!-- TEXT GENERATOR -->
+
+        <div class="card">
+
+            <div class="icon">
+                🔤
+            </div>
+
+            <h3>
+                AI Text Generator
+            </h3>
+
+            <p>
+                Generate high-quality content
+                in seconds.
+            </p>
+
+            <ul>
+                <li>🟣 Blog posts</li>
+                <li>🟣 Essays</li>
+                <li>🟣 Social media content</li>
+            </ul>
+
+            <button onclick="alert('AI Text Generator coming soon!')">
+                Try Now →
+            </button>
+
+        </div>
+
+
+        <!-- PROMPT GENERATOR -->
+
+        <div class="card">
+
+            <div class="icon">
+                🪄
+            </div>
+
+            <h3>
+                Prompt Generator
+            </h3>
+
+            <p>
+                Create powerful prompts
+                for AI models.
+            </p>
+
+            <ul>
+                <li>🔵 Better results</li>
+                <li>🔵 Save time</li>
+                <li>🔵 Smart suggestions</li>
+            </ul>
+
+            <button onclick="alert('Prompt Generator coming soon!')">
+                Try Now →
+            </button>
+
+        </div>
+
+
+        <!-- STUDY HELPER -->
+
+        <div class="card">
+
+            <div class="icon">
+                🎓
+            </div>
+
+            <h3>
+                Study Helper
+            </h3>
+
+            <p>
+                Your AI study companion
+                for learning.
+            </p>
+
+            <ul>
+                <li>🟢 Summaries</li>
+                <li>🟢 Explanations</li>
+                <li>🟢 Study tips</li>
+            </ul>
+
+            <button onclick="alert('Study Helper coming soon!')">
+                Try Now →
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <div>
+        🤖 <b>AI Hub</b><br>
+        Smart AI tools for everyone.
+    </div>
+
+    <div>
+        Made with ❤️ by Hema Sai Challa
+    </div>
+
+    <div>
+        GitHub · Twitter · Instagram · LinkedIn
+    </div>
+
+</footer>
 
 </body>
-</html>
+    </html>
