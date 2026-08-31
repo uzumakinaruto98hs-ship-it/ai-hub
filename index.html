@@ -19,7 +19,6 @@ body{
     min-height:100vh;
 }
 
-/* HEADER */
 header{
     height:82px;
     background:white;
@@ -54,14 +53,12 @@ header{
     cursor:pointer;
 }
 
-/* CHAT PAGE */
 .chat-page{
     height:calc(100vh - 82px);
     display:flex;
     flex-direction:column;
 }
 
-/* WELCOME */
 .welcome{
     text-align:center;
     padding-top:85px;
@@ -95,7 +92,6 @@ header{
     font-size:18px;
 }
 
-/* MESSAGES */
 .messages{
     flex:1;
     width:100%;
@@ -137,7 +133,6 @@ header{
     border-bottom-left-radius:5px;
 }
 
-/* INPUT AREA */
 .input-area{
     position:fixed;
     left:50%;
@@ -147,7 +142,6 @@ header{
     max-width:850px;
 }
 
-/* TOOLS MENU */
 .tools-menu{
     display:none;
     position:absolute;
@@ -194,7 +188,6 @@ header{
     font-size:15px;
 }
 
-/* INPUT BOX */
 .input-box{
     height:68px;
     background:white;
@@ -237,39 +230,10 @@ header{
     cursor:pointer;
 }
 
-/* LOADING */
-.loading{
-    display:flex;
-    gap:5px;
-    align-items:center;
+.send:disabled{
+    opacity:.6;
 }
 
-.loading span{
-    width:7px;
-    height:7px;
-    background:#2866d8;
-    border-radius:50%;
-    animation:blink 1.2s infinite;
-}
-
-.loading span:nth-child(2){
-    animation-delay:.2s;
-}
-
-.loading span:nth-child(3){
-    animation-delay:.4s;
-}
-
-@keyframes blink{
-    0%,80%,100%{
-        opacity:.2;
-    }
-    40%{
-        opacity:1;
-    }
-}
-
-/* MOBILE */
 @media(max-width:700px){
 
     header{
@@ -347,7 +311,6 @@ header{
 
 </header>
 
-
 <section class="chat-page">
 
     <div class="welcome" id="welcome">
@@ -366,9 +329,7 @@ header{
 
     </div>
 
-
     <div class="messages" id="messages"></div>
-
 
     <div class="input-area">
 
@@ -412,7 +373,6 @@ header{
 
         </div>
 
-
         <div class="input-box">
 
             <button class="plus" onclick="toggleMenu()">
@@ -427,7 +387,7 @@ header{
                 autocomplete="off"
             >
 
-            <button class="send" onclick="sendMessage()">
+            <button class="send" id="sendBtn" onclick="sendMessage()">
                 ➤
             </button>
 
@@ -437,15 +397,13 @@ header{
 
 </section>
 
-
 <script>
 
-/* CLOUDFLARE WORKER URL */
-const API_URL =
-"https://ai-hub-api.uzumakinaruto98hs.workers.dev";
+/* YOUR CLOUDFLARE WORKER URL */
+const AI_API_URL =
+"https://ai-hub-apii.uzumakinaruto98hs.workers.dev/";
 
 
-/* TOOLS MENU */
 function toggleMenu(){
 
     document
@@ -455,14 +413,12 @@ function toggleMenu(){
 }
 
 
-/* SELECT TOOL */
 function selectTool(tool){
 
     const input =
         document.getElementById("input");
 
-    input.value =
-        tool + ": ";
+    input.value = tool + ": ";
 
     input.focus();
 
@@ -473,11 +429,13 @@ function selectTool(tool){
 }
 
 
-/* SEND MESSAGE */
 async function sendMessage(){
 
     const input =
         document.getElementById("input");
+
+    const sendBtn =
+        document.getElementById("sendBtn");
 
     const text =
         input.value.trim();
@@ -486,35 +444,33 @@ async function sendMessage(){
         return;
     }
 
-
-    /* HIDE WELCOME */
     document
         .getElementById("welcome")
         .classList.add("hide");
 
-
-    /* USER MESSAGE */
     addMessage(text,"user");
 
-
-    /* CLEAR INPUT */
     input.value = "";
 
+    sendBtn.disabled = true;
 
-    /* LOADING MESSAGE */
-    const loadingId =
-        addLoading();
+    addMessage("Thinking...","ai");
 
+    const messages =
+        document.getElementById("messages");
+
+    const thinkingBubble =
+        messages.lastElementChild
+        .querySelector(".bubble");
 
     try{
 
         const response =
-            await fetch(API_URL,{
+            await fetch(AI_API_URL,{
                 method:"POST",
 
                 headers:{
-                    "Content-Type":
-                    "application/json"
+                    "Content-Type":"application/json"
                 },
 
                 body:JSON.stringify({
@@ -527,49 +483,48 @@ async function sendMessage(){
             await response.json();
 
 
-        /* REMOVE LOADING */
-        removeMessage(loadingId);
+        if(!response.ok){
 
-
-        if(data.reply){
-
-            addMessage(
-                data.reply,
-                "ai"
-            );
-
-        }else{
-
-            addMessage(
-                "AI response raledhu ❌",
-                "ai"
+            throw new Error(
+                data.error || "AI request failed"
             );
 
         }
 
 
+        if(data.reply){
+
+            thinkingBubble.textContent =
+                data.reply;
+
+        }else{
+
+            thinkingBubble.textContent =
+                "AI nundi reply raledu ❌";
+
+        }
+
     }catch(error){
 
         console.error(error);
 
-        removeMessage(loadingId);
-
-        addMessage(
-            "AI connection ki problem vachindhi ❌",
-            "ai"
-        );
+        thinkingBubble.textContent =
+            "AI connection ki problem vachindhi ❌";
 
     }
+
+    sendBtn.disabled = false;
+
+    messages.scrollTop =
+        messages.scrollHeight;
 
 }
 
 
-/* ADD MESSAGE */
 function addMessage(text,type){
 
     const messages =
         document.getElementById("messages");
-
 
     const message =
         document.createElement("div");
@@ -577,22 +532,18 @@ function addMessage(text,type){
     message.className =
         "message " + type;
 
-
     const bubble =
         document.createElement("div");
 
     bubble.className =
         "bubble";
-
 
     bubble.textContent =
         text;
 
-
     message.appendChild(bubble);
 
     messages.appendChild(message);
-
 
     messages.scrollTop =
         messages.scrollHeight;
@@ -600,86 +551,49 @@ function addMessage(text,type){
 }
 
 
-/* LOADING */
-function addLoading(){
+function toggleTheme(){
 
-    const messages =
-        document.getElementById("messages");
+    document.body.classList.toggle("dark");
 
+    if(document.body.classList.contains("dark")){
 
-    const message =
-        document.createElement("div");
+        document.body.style.background =
+            "#111827";
 
-    message.className =
-        "message ai";
+        document.body.style.color =
+            "#f1f5f9";
 
+    }else{
 
-    const bubble =
-        document.createElement("div");
+        document.body.style.background =
+            "#f7f9fc";
 
-    bubble.className =
-        "bubble";
+        document.body.style.color =
+            "#172033";
 
-
-    bubble.innerHTML = `
-        <div class="loading">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    `;
-
-
-    message.appendChild(bubble);
-
-    messages.appendChild(message);
-
-
-    messages.scrollTop =
-        messages.scrollHeight;
-
-
-    const id =
-        "loading-" + Date.now();
-
-    message.id = id;
-
-
-    return id;
-
-}
-
-
-/* REMOVE MESSAGE */
-function removeMessage(id){
-
-    const element =
-        document.getElementById(id);
-
-    if(element){
-        element.remove();
     }
 
 }
 
 
-/* ENTER TO SEND */
 document
-.getElementById("input")
-.addEventListener(
-    "keydown",
-    function(event){
+    .getElementById("input")
+    .addEventListener(
+        "keydown",
+        function(event){
 
-        if(event.key === "Enter"){
-            event.preventDefault();
-            sendMessage();
+            if(event.key === "Enter"){
+
+                event.preventDefault();
+
+                sendMessage();
+
+            }
+
         }
-
-    }
-);
+    );
 
 
-/* CLOSE TOOLS MENU */
 document.addEventListener(
     "click",
     function(event){
@@ -689,7 +603,6 @@ document.addEventListener(
 
         const plus =
             document.querySelector(".plus");
-
 
         if(
             !menu.contains(event.target) &&
@@ -703,28 +616,7 @@ document.addEventListener(
     }
 );
 
-
-/* THEME */
-function toggleTheme(){
-
-    const body =
-        document.body;
-
-    if(body.style.background === "rgb(23, 32, 51)"){
-
-        body.style.background = "#f7f9fc";
-        body.style.color = "#172033";
-
-    }else{
-
-        body.style.background = "#172033";
-        body.style.color = "#ffffff";
-
-    }
-
-}
-
 </script>
 
 </body>
-        </html>
+    </html>
