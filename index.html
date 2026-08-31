@@ -406,6 +406,11 @@ header{
 
 <script>
 
+/* CLOUDFLARE WORKERS AI API */
+const AI_API_URL =
+    "https://ai-hub-api.uzumakinaruto98hs.workers.dev";
+
+
 function toggleMenu(){
 
     document
@@ -431,7 +436,8 @@ function selectTool(tool){
 }
 
 
-function sendMessage(){
+/* SEND MESSAGE */
+async function sendMessage(){
 
     const input =
         document.getElementById("input");
@@ -452,17 +458,100 @@ function sendMessage(){
     /* ADD USER MESSAGE */
     addMessage(text,"user");
 
+    /* CLEAR INPUT */
     input.value = "";
 
-    /* DEMO AI REPLY */
-    setTimeout(function(){
+    /* SHOW THINKING */
+    addMessage("Thinking... 🤔","ai");
+
+    const messages =
+        document.getElementById("messages");
+
+    const thinkingBubble =
+        messages.lastElementChild;
+
+    try{
+
+        const response =
+            await fetch(
+                AI_API_URL,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+
+                    body:JSON.stringify({
+                        message:text
+                    })
+                }
+            );
+
+
+        if(!response.ok){
+            throw new Error(
+                "API request failed"
+            );
+        }
+
+
+        const data =
+            await response.json();
+
+
+        /* REMOVE THINKING MESSAGE */
+        if(thinkingBubble){
+            thinkingBubble.remove();
+        }
+
+
+        /* GET AI REPLY */
+        let reply =
+            data.reply ||
+            data.response ||
+            data.result ||
+            data.text;
+
+
+        if(typeof reply === "object"){
+            reply =
+                JSON.stringify(reply);
+        }
+
+
+        if(!reply){
+            reply =
+                "AI response raledu bro 😅";
+        }
+
 
         addMessage(
-            "Hi! 👋 I'm your AI Hub assistant. Real AI connection will be added next!",
+            reply,
             "ai"
         );
 
-    },700);
+
+    }catch(error){
+
+        console.error(
+            "AI Error:",
+            error
+        );
+
+
+        /* REMOVE THINKING MESSAGE */
+        if(thinkingBubble){
+            thinkingBubble.remove();
+        }
+
+
+        addMessage(
+            "AI connection lo problem vachindi ❌ Please try again.",
+            "ai"
+        );
+
+    }
 
 }
 
@@ -487,9 +576,13 @@ function addMessage(text,type){
     bubble.textContent =
         text;
 
-    message.appendChild(bubble);
+    message.appendChild(
+        bubble
+    );
 
-    messages.appendChild(message);
+    messages.appendChild(
+        message
+    );
 
     messages.scrollTop =
         messages.scrollHeight;
