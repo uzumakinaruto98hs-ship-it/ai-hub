@@ -117,7 +117,6 @@ header{
     font-size:16px;
     line-height:1.5;
     word-wrap:break-word;
-    white-space:pre-wrap;
 }
 
 .user .bubble{
@@ -387,7 +386,10 @@ header{
                 autocomplete="off"
             >
 
-            <button class="send" id="sendBtn" onclick="sendMessage()">
+            <button
+                id="send"
+                class="send"
+                onclick="sendMessage()">
                 ➤
             </button>
 
@@ -400,9 +402,11 @@ header{
 <script>
 
 /* YOUR CLOUDFLARE WORKER URL */
-const AI_API_URL =
-"https://ai-hub-apii.uzumakinaruto98hs.workers.dev/";
+const API_URL =
+    "https://ai-hub-apii.uzumakinaruto98hs.workers.dev/";
 
+
+/* TOOLS MENU */
 
 function toggleMenu(){
 
@@ -429,13 +433,15 @@ function selectTool(tool){
 }
 
 
+/* SEND MESSAGE */
+
 async function sendMessage(){
 
     const input =
         document.getElementById("input");
 
-    const sendBtn =
-        document.getElementById("sendBtn");
+    const send =
+        document.getElementById("send");
 
     const text =
         input.value.trim();
@@ -444,29 +450,33 @@ async function sendMessage(){
         return;
     }
 
+
+    /* HIDE WELCOME */
+
     document
         .getElementById("welcome")
         .classList.add("hide");
+
+
+    /* SHOW USER MESSAGE */
 
     addMessage(text,"user");
 
     input.value = "";
 
-    sendBtn.disabled = true;
+    send.disabled = true;
 
-    addMessage("Thinking...","ai");
 
-    const messages =
-        document.getElementById("messages");
+    /* LOADING MESSAGE */
 
-    const thinkingBubble =
-        messages.lastElementChild
-        .querySelector(".bubble");
+    const loading =
+        addMessage("Thinking...","ai");
+
 
     try{
 
         const response =
-            await fetch(AI_API_URL,{
+            await fetch(API_URL,{
                 method:"POST",
 
                 headers:{
@@ -479,47 +489,77 @@ async function sendMessage(){
             });
 
 
-        const data =
-            await response.json();
-
-
         if(!response.ok){
 
             throw new Error(
-                data.error || "AI request failed"
+                "Server error: " + response.status
             );
 
         }
 
 
+        const data =
+            await response.json();
+
+
+        /* REMOVE LOADING */
+
+        loading.remove();
+
+
         if(data.reply){
 
-            thinkingBubble.textContent =
-                data.reply;
+            addMessage(
+                data.reply,
+                "ai"
+            );
 
-        }else{
+        }
+        else if(data.error){
 
-            thinkingBubble.textContent =
-                "AI nundi reply raledu ❌";
+            addMessage(
+                "AI error: " + data.error,
+                "ai"
+            );
+
+        }
+        else{
+
+            addMessage(
+                "AI nundi reply raledhu ❌",
+                "ai"
+            );
 
         }
 
-    }catch(error){
 
-        console.error(error);
+    }
+    catch(error){
 
-        thinkingBubble.textContent =
-            "AI connection ki problem vachindhi ❌";
+        loading.remove();
+
+        addMessage(
+            "AI connection ki problem vachindhi ❌\n\n" +
+            "Worker URL / API ni check cheyyali.",
+            "ai"
+        );
+
+        console.error(
+            "AI Hub Error:",
+            error
+        );
 
     }
 
-    sendBtn.disabled = false;
 
-    messages.scrollTop =
-        messages.scrollHeight;
+    send.disabled = false;
+
+    input.focus();
 
 }
 
+
+/* ADD MESSAGE */
 
 function addMessage(text,type){
 
@@ -548,33 +588,12 @@ function addMessage(text,type){
     messages.scrollTop =
         messages.scrollHeight;
 
-}
-
-
-function toggleTheme(){
-
-    document.body.classList.toggle("dark");
-
-    if(document.body.classList.contains("dark")){
-
-        document.body.style.background =
-            "#111827";
-
-        document.body.style.color =
-            "#f1f5f9";
-
-    }else{
-
-        document.body.style.background =
-            "#f7f9fc";
-
-        document.body.style.color =
-            "#172033";
-
-    }
+    return message;
 
 }
 
+
+/* ENTER TO SEND */
 
 document
     .getElementById("input")
@@ -583,16 +602,14 @@ document
         function(event){
 
             if(event.key === "Enter"){
-
-                event.preventDefault();
-
                 sendMessage();
-
             }
 
         }
     );
 
+
+/* CLOSE MENU */
 
 document.addEventListener(
     "click",
@@ -616,7 +633,36 @@ document.addEventListener(
     }
 );
 
+
+/* THEME */
+
+function toggleTheme(){
+
+    if(
+        document.body.style.background ===
+        "rgb(18, 18, 18)"
+    ){
+
+        document.body.style.background =
+            "#f7f9fc";
+
+        document.body.style.color =
+            "#172033";
+
+    }
+    else{
+
+        document.body.style.background =
+            "#121212";
+
+        document.body.style.color =
+            "#ffffff";
+
+    }
+
+}
+
 </script>
 
 </body>
-    </html>
+</html>
